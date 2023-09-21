@@ -16,6 +16,7 @@ $ docker run -p 8080:8080 order-packager
 
 ### API Endpoints
 
+---
 - `POST` - `/calculate-packs`: Calculate the number of packs needed for an order
 #### Request Example
 Body:
@@ -45,7 +46,7 @@ Response:
   ]
 }
 ```
-
+---
 - `POST` - `/packs`: Create a new pack with size
 #### Request Example
 Body:
@@ -73,7 +74,7 @@ if id is used before:
   "success": false
 }
 ```
-
+---
 - GET - `packs`: Get all packs
 #### Request Example
 Response:
@@ -108,6 +109,7 @@ Response:
     "success": true
 }
 ```
+---
 - GET - `/packs/:id`: Get a pack by id
 Reponse:
 ```json
