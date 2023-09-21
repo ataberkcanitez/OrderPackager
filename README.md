@@ -7,11 +7,11 @@ This application calculates the number of packs needed to fulfill customer order
 ## How to Run
 - Build the Docker image:
  ```
-$ docker build -t pack-calculator .
+$ docker build -t order-packager .
 ```
 - Run the Docker Container
 ```
-$ docker run -p 8080:8080 pack-calculator
+$ docker run -p 8080:8080 order-packager
 ```
 
 ### API Endpoint
@@ -21,16 +21,27 @@ $ docker run -p 8080:8080 pack-calculator
 Body:
 ```json
 {
-  "items_to_ship": 12001
+  "itemsToShip": 12001
 }
 ```
 Response:
 ```json
 {
-  "pack_counts": {
-    "5000": 2,
-    "1000": 1,
-    "250": 1
-  }
+  "packCounts": [
+    {
+      "Pack": {
+        "ID": 5,
+        "Size": 5000
+      },
+      "Amount": 2
+    },
+    {
+      "Pack": {
+        "ID": 4,
+        "Size": 2000
+      },
+      "Amount": 1
+    }
+  ]
 }
 ```
