@@ -1,15 +1,36 @@
 package order
 
-import "github.com/ataberkcanitez/OrderPackager/internal/pack"
+import (
+	"github.com/ataberkcanitez/OrderPackager/internal/pack"
+	"sort"
+)
 
-type defaultOrderService struct {
-	packService pack.PackService
+type OrderServiceImpl struct {
+	PackService pack.PackService
 }
 
-func NewOrderService(packService pack.PackService) OrderService {
-	return &defaultOrderService{packService: packService}
+func (os *OrderServiceImpl) CalculatePacksForOrder(itemsToShip int) ([]int, error) {
+	packs, err := os.PackService.GetAllPacks()
+	if err != nil {
+		return nil, err
+	}
+
+	sortPacksBySizeDescending(packs)
+
+	packsCounts := make([]int, len(packs))
+	itemsRemaining := itemsToShip
+
+	for i, pack := range packs {
+		packsCounts[i] = itemsRemaining / pack.Size
+		itemsRemaining %= pack.Size
+	}
+
+	return packsCounts, nil
 }
 
-func (o *defaultOrderService) CalculatePacksForOrder(order Order) []int {
-	return nil
+func sortPacksBySizeDescending(packs []pack.Pack) {
+	sortBySize := func(i, j int) bool {
+		return packs[i].Size > packs[j].Size
+	}
+	sort.SliceStable(packs, sortBySize)
 }

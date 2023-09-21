@@ -1,9 +1,10 @@
 package order
 
 type Order struct {
-	Items int
+	ID          int
+	ItemsToShip int
 }
 
 type OrderService interface {
-	CalculatePacksForOrder(order Order) []int
+	CalculatePacksForOrder(itemsToShip int) ([]int, error)
 }

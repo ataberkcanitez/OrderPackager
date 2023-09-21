@@ -1,10 +1,11 @@
 package pack
 
 type Pack struct {
-	Size   int
-	Amount int
+	ID   int
+	Size int
 }
 
 type PackService interface {
-	CalculatePacks(items int) []Pack
+	GetAllPacks() ([]Pack, error)
+	GetPackByID(id int) (*Pack, error)
 }
