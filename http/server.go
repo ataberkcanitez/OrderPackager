@@ -1,18 +1,29 @@
 package http
 
 import (
-	"github.com/ataberkcanitez/OrderPackager/internal/order"
-	"github.com/ataberkcanitez/OrderPackager/internal/pack"
+	"github.com/ataberkcanitez/order-packager/order"
+	"github.com/ataberkcanitez/order-packager/pack"
 	"github.com/gofiber/fiber/v2"
+)
+
+type (
+	orderService interface {
+		CalculatePacksForOrder(itemsTShip int) ([]*order.OrderResponse, error)
+	}
+
+	packService interface {
+		GetAllPacks() ([]*pack.Pack, error)
+		GetPackByID(id string) (*pack.Pack, error)
+	}
 )
 
 type HTTPServer struct {
 	app          *fiber.App
-	orderService order.OrderService
-	packService  pack.PackService
+	orderService orderService
+	packService  packService
 }
 
-func NewHTTPServer(app *fiber.App, orderService order.OrderService, packService pack.PackService) *HTTPServer {
+func NewHTTPServer(app *fiber.App, orderService orderService, packService packService) *HTTPServer {
 	return &HTTPServer{
 		app:          app,
 		orderService: orderService,

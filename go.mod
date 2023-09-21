@@ -1,4 +1,4 @@
-module github.com/ataberkcanitez/OrderPackager
+module github.com/ataberkcanitez/order-packager
 
 go 1.19
 

@@ -1,16 +1,18 @@
-FROM golang:1.17 AS build
+# build phase
+FROM golang:1.20
 
-WORKDIR /go/src/app
+WORKDIR /app
+COPY . /app
+ENV CGO_ENABLED=0
 
-COPY cmd/ cmd/
-COPY go.mod go.sum ./
+RUN go build -o order-tracker .
 
-RUN go build -o app cmd/main.go
-
+# execution phase
 FROM alpine:latest
 
-COPY --from=build /go/src/app/app /app
-
+WORKDIR /
+COPY --from=0 /app/order-tracker ./
 EXPOSE 8080
 
-CMD ["/app"]
+CMD ["./order-tracker"]
+

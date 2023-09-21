@@ -1,16 +1,26 @@
 package order
 
 import (
-	"github.com/ataberkcanitez/OrderPackager/internal/pack"
+	"github.com/ataberkcanitez/order-packager/pack"
 	"sort"
 )
 
-type OrderServiceImpl struct {
-	PackService pack.PackService
+type packService interface {
+	GetAllPacks() ([]*pack.Pack, error)
 }
 
-func (os *OrderServiceImpl) CalculatePacksForOrder(itemsToShip int) ([]*OrderResponse, error) {
-	packs, err := os.PackService.GetAllPacks()
+type orderService struct {
+	packSvc packService
+}
+
+func NewOrderService(packSvc packService) *orderService {
+	return &orderService{
+		packSvc: packSvc,
+	}
+}
+
+func (os *orderService) CalculatePacksForOrder(itemsToShip int) ([]*OrderResponse, error) {
+	packs, err := os.packSvc.GetAllPacks()
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +45,7 @@ func (os *OrderServiceImpl) CalculatePacksForOrder(itemsToShip int) ([]*OrderRes
 	return orderResponse, nil
 }
 
-func sortPacksBySizeDescending(packs []pack.Pack) {
+func sortPacksBySizeDescending(packs []*pack.Pack) {
 	sortBySize := func(i, j int) bool {
 		return packs[i].Size > packs[j].Size
 	}
