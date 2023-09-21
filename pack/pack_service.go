@@ -21,6 +21,7 @@ func (ps *packService) GetAllPacks() ([]*Pack, error) {
 }
 
 var ErrPackNotFound = errors.New("Pack not found")
+var ErrPackAlreadyExists = errors.New("Pack already exists")
 
 func (ps *packService) GetPackByID(id string) (*Pack, error) {
 	pack, ok := ps.db.Get(id)
@@ -28,4 +29,14 @@ func (ps *packService) GetPackByID(id string) (*Pack, error) {
 		return nil, ErrPackNotFound
 	}
 	return pack, nil
+}
+
+func (ps *packService) Add(id string, pack *Pack) error {
+	existingPack, _ := ps.GetPackByID(id)
+	if existingPack != nil {
+		return ErrPackAlreadyExists
+	}
+
+	ps.db.Save(id, pack)
+	return nil
 }
