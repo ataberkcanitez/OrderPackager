@@ -46,13 +46,13 @@ func (s *HTTPServer) addPackHandler(c *fiber.Ctx) error {
 	}
 
 	if err := c.BodyParser(&request); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "error": "invalid request"})
 	}
 
 	pack := &pack.Pack{ID: request.ID, Size: request.Size}
 	err := s.packService.Add(request.ID, pack)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Internal Server Error", "details": err.Error()})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": "Internal Server Error", "details": err.Error()})
 	}
 
 	return c.JSON(fiber.Map{"success": true, "pack": pack})
@@ -64,12 +64,12 @@ func (s *HTTPServer) calculatePacksHandler(c *fiber.Ctx) error {
 	}
 
 	if err := c.BodyParser(&request); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid request"})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "error": "invalid request"})
 	}
 
 	packCounts, err := s.orderService.CalculatePacksForOrder(request.ItemsToShip)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Internal Server Error"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": "Internal Server Error"})
 	}
 
 	return c.JSON(fiber.Map{"packCounts": packCounts, "success": true})
@@ -78,7 +78,7 @@ func (s *HTTPServer) calculatePacksHandler(c *fiber.Ctx) error {
 func (s *HTTPServer) getAllPacksHandler(c *fiber.Ctx) error {
 	allPacks, err := s.packService.GetAllPacks()
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Internal Server Error"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": "Internal Server Error"})
 	}
 	return c.JSON(fiber.Map{"packs": allPacks, "success": true})
 }
@@ -87,7 +87,7 @@ func (s *HTTPServer) getPackByIDHandler(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	pack, err := s.packService.GetPackByID(id)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Internal Server Error"})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": "Internal Server Error"})
 	}
 	return ctx.JSON(fiber.Map{"pack": pack, "success": true})
 

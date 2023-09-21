@@ -14,7 +14,7 @@ $ docker build -t order-packager .
 $ docker run -p 8080:8080 order-packager
 ```
 
-### API Endpoint
+### API Endpoints
 
 - `POST` - `/calculate-packs`: Calculate the number of packs needed for an order
 #### Request Example
@@ -43,5 +43,79 @@ Response:
       "Amount": 1
     }
   ]
+}
+```
+
+- `POST` - `/packs`: Create a new pack with size
+#### Request Example
+Body:
+```json
+{
+  "id": "10",
+  "amount": 15000
+}
+```
+if id is not used before:
+```json
+{
+    "pack": {
+        "ID": "10",
+        "Size": 15000
+    },
+    "success": true
+}
+```
+if id is used before:
+```json
+{
+  "details": "Pack already exists",
+  "error": "Internal Server Error",
+  "success": false
+}
+```
+
+- GET - `packs`: Get all packs
+#### Request Example
+Response:
+```json
+{
+    "packs": [
+        {
+            "ID": "2",
+            "Size": 500
+        },
+        {
+            "ID": "3",
+            "Size": 1000
+        },
+        {
+            "ID": "4",
+            "Size": 2000
+        },
+        {
+            "ID": "5",
+            "Size": 5000
+        },
+        {
+            "ID": "10",
+            "Size": 15000
+        },
+        {
+            "ID": "1",
+            "Size": 250
+        }
+    ],
+    "success": true
+}
+```
+- GET - `/packs/:id`: Get a pack by id
+Reponse:
+```json
+  {
+    "pack": {
+        "ID": "2",
+        "Size": 500
+    },
+    "success": true
 }
 ```
