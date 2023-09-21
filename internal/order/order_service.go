@@ -9,7 +9,7 @@ type OrderServiceImpl struct {
 	PackService pack.PackService
 }
 
-func (os *OrderServiceImpl) CalculatePacksForOrder(itemsToShip int) ([]int, error) {
+func (os *OrderServiceImpl) CalculatePacksForOrder(itemsToShip int) (map[int]int, error) {
 	packs, err := os.PackService.GetAllPacks()
 	if err != nil {
 		return nil, err
@@ -17,12 +17,15 @@ func (os *OrderServiceImpl) CalculatePacksForOrder(itemsToShip int) ([]int, erro
 
 	sortPacksBySizeDescending(packs)
 
-	packsCounts := make([]int, len(packs))
+	packsCounts := make(map[int]int)
 	itemsRemaining := itemsToShip
 
-	for i, pack := range packs {
-		packsCounts[i] = itemsRemaining / pack.Size
+	for _, pack := range packs {
+		packCount := itemsRemaining / pack.Size
 		itemsRemaining %= pack.Size
+		if packCount > 0 {
+			packsCounts[pack.Size] = packCount
+		}
 	}
 
 	return packsCounts, nil

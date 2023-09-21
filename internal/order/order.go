@@ -6,5 +6,5 @@ type Order struct {
 }
 
 type OrderService interface {
-	CalculatePacksForOrder(itemsToShip int) ([]int, error)
+	CalculatePacksForOrder(itemsToShip int) (map[int]int, error)
 }
