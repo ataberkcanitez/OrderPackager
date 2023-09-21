@@ -121,3 +121,8 @@ Reponse:
     "success": true
 }
 ```
+---
+To simplify the api calls, I provided a postman collection, it's under the /docs/postman folder
+please use it to send requests.
+Also please make sure that there is no other process runs on 8080 port. if so, it will cause a conflict.
+You can adjust your host as `localhost:<port:8080>` you can change the port in the Dockerfile as well if you want.
